@@ -3,7 +3,6 @@ import asyncio
 from fastapi import FastAPI, UploadFile, File, Form, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
-# Import AudioFileClip for the final stitching
 from moviepy import VideoFileClip, AudioFileClip
 from faster_whisper import WhisperModel
 from deep_translator import GoogleTranslator
