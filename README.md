@@ -1,16 +1,17 @@
 # AI Video Dubbing Studio
 
-An end-to-end, fully automated AI video dubbing pipeline that transcribes, translates, and re-voices videos seamlessly. By combining highly optimized open-source AI models with fast, responsive network APIs, this application delivers an efficient media processing pipeline with studio-quality voice translation and video synchronization.
+An end-to-end, fully automated AI video dubbing pipeline designed to transcribe, translate, and re-voice videos seamlessly. By combining highly optimized open-source AI models with fast, responsive network APIs, this application delivers an ultra-efficient media processing pipeline. The entire ecosystem is architected to prioritize streamlined asset rendering, low-latency execution, and minimal resource footprints while providing studio-quality voice translation and video synchronization.
 
 ---
 
 ## Key Features
 
-- **Efficient Local Transcription** — Utilizes high-performance 8-bit quantization to run speech-to-text locally with a remarkably lightweight resource footprint.
-- **Neural Voice Generation** — Leverages state-of-the-art cloud network architectures to synthesize natural-sounding, expressive human voices instantly.
-- **Smart Timestamp Mapping** — Translates text line-by-line while strictly preserving original video timing constraints for accurate pacing.
-- **Asynchronous API Architecture** — Built on a robust backend capable of handling video file streams and concurrent processing tasks smoothly.
-- **Interactive Web Dashboard** — Features a clean, responsive web interface that allows users to upload, process, and preview dubbed media without using a command line.
+- **Optimized Transcription Engine** — Utilizes advanced 8-bit quantization configurations to handle local speech-to-text processing with minimal hardware overhead.
+- **Neural Voice Synthesis** — Leverages state-of-the-art cloud network architectures to generate natural-sounding, expressive human voices instantly.
+- **Precision Timing & Alignment** — Translates scripts segment-by-segment while strictly preserving original timestamps to maintain perfect video pacing.
+- **Production-Ready Containerization** — Fully containerized using Docker Compose for seamless, multi-service deployment with isolated environments.
+- **Robust Automated Testing** — Ships with a robust test suite powered by pytest to ensure continuous integration safety and route stability.
+- **Interactive Web Dashboard** — Features a clean, responsive Streamlit interface that lets users upload, process, and download dubbed media effortlessly.
 
 ---
 
@@ -24,6 +25,8 @@ An end-to-end, fully automated AI video dubbing pipeline that transcribes, trans
 | Translation Engine | Deep-Translator | Flexible translation pipeline utilizing automated language detection. |
 | Text-to-Speech (TTS) | Edge-TTS | Microsoft Edge's advanced neural network communication voices. |
 | Video & Audio Editing | MoviePy v2.0 | Digital media processor used for track splitting and final audio-video stitching. |
+| Testing Suite | Pytest / HTTPX | Testing frameworks utilized for automated endpoint verification. |
+| Containerization | Docker / Compose | Container platform used to orchestrate application deployment layers. |
 
 ---
 
@@ -34,76 +37,106 @@ An end-to-end, fully automated AI video dubbing pipeline that transcribes, trans
 
 ---
 
-##  Setup & Installation
+## Docker Deployment (Recommended)
 
-### 1. Project Environment Setup
+The fastest way to deploy and run the entire stack with isolated networking is using Docker Compose. Ensure you have **Docker Desktop** installed and running on your machine.
 
-Open your terminal inside the project directory and create an isolated virtual environment to manage dependencies:
+### 1. Clone the Repository
 
 ```bash
-# Navigate to the core application directory
-cd verba--AI_dubber
-
-# Create virtual environment
-python -m venv venv
-
-# Activate the virtual environment (Windows)
-.\venv\Scripts\activate
-
-# Activate the virtual environment (macOS/Linux)
-source venv/bin/activate
+git clone https://github.com/YOUR_USERNAME/ai-video-dubber.git
+cd ai-video-dubber
 ```
 
-### 2. Installing Dependencies
+### 2. Launch the Container Stack
 
-Install the optimized version of PyTorch along with the necessary web and machine learning packages:
+Run the following command from the root directory (where `docker-compose.yml` is located):
 
 ```bash
-# Install PyTorch core configuration
-.\venv\Scripts\python.exe -m pip install torch --index-url https://download.pytorch.org/whl/cpu
+docker compose up --build
+```
 
-# Install the rest of the application packages
-.\venv\Scripts\python.exe -m pip install fastapi uvicorn python-multipart moviepy faster-whisper deep-translator edge-tts streamlit requests
+### 3. Access the Application
+
+| Service | URL |
+|---|---|
+| Interactive Web UI | http://localhost:8501 |
+| FastAPI Backend Docs | http://localhost:8000/docs |
+
+---
+
+##  Automated Testing
+
+This project includes automated test configurations to validate API functionality, format handling, and localized configurations.
+
+To execute the test suite within your active local virtual environment, navigate to the core module directory and run:
+
+```bash
+cd verba--AI_dubber
+.\venv\Scripts\python.exe -m pytest -v
 ```
 
 ---
 
-## Running the Application
+##  Manual Local Setup (Alternative)
 
-This app uses a decoupled client-server architecture. You must launch the **Core Server** and the **Web UI** simultaneously in two separate terminal windows.
+If you prefer to run the application components outside of Docker, follow these local execution guidelines.
 
-### Step 1 — Start the FastAPI Server
+### 1. Environment Initialization
 
-In your first terminal, ensure your environment is activated and start the backend pipeline:
+Navigate into the application folder and build an isolated virtual environment:
+
+```bash
+cd verba--AI_dubber
+python -m venv venv
+
+# Windows Activation
+.\venv\Scripts\activate
+
+# macOS/Linux Activation
+source venv/bin/activate
+```
+
+### 2. Dependencies Setup
+
+Install the optimized compute variant of PyTorch followed by the rest of the web packages:
+
+```bash
+.\venv\Scripts\python.exe -m pip install torch --index-url https://download.pytorch.org/whl/cpu
+.\venv\Scripts\python.exe -m pip install -r requirements.txt
+```
+
+### 3. Execution
+
+You will need to run the Backend Engine and the Web UI simultaneously in two separate terminal windows.
+
+**Terminal 1 — Backend Server:**
 
 ```bash
 .\venv\Scripts\python.exe -m uvicorn main:app --reload
 ```
 
-> Wait until you see `Whisper Model loaded successfully!` in the logs before proceeding.
-
-### Step 2 — Start the Streamlit Frontend
-
-Open a second terminal window, ensure the virtual environment is active, and launch the dashboard:
+**Terminal 2 — Frontend Dashboard:**
 
 ```bash
 .\venv\Scripts\python.exe -m streamlit run frontend.py
 ```
 
-The interface will automatically open in your browser at **http://localhost:8501**.
-
 ---
 
-## Project Structure
+##  Project Structure
 
 ```
 ai-video-dubber/
 │
 ├── verba--AI_dubber/
-│   ├── venv/              # Local isolated Python environment binaries
-│   ├── workspace/         # Auto-generated directory for temporary rendering processes
-│   ├── main.py            # Core FastAPI processing server
-│   └── frontend.py        # Streamlit application rendering the web studio layout
+│   ├── Dockerfile.backend      # API backend container construction rules
+│   ├── Dockerfile.frontend     # Web application container construction rules
+│   ├── requirements.txt        # Python package version definitions
+│   ├── main.py                 # Core FastAPI backend processing server
+│   ├── frontend.py             # Streamlit application layout configuration
+│   └── test_main.py            # Automated Pytest suite configuration
 │
-└── README.md              # Project documentation hub
+├── docker-compose.yml          # Container assembly engine orchestrator
+└── README.md                   # Main technical documentation hub
 ```
